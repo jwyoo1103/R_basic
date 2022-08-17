@@ -57,3 +57,54 @@ roll2 <-  function(bones = 1:6) {
 
 roll2()
 roll2() # now we use default value of argument, vector c(1:6).
+
+## Chapter 2. Packages and Help
+
+# 2.1. Packages
+
+qplot # we can see error message, as 'ggplot2' package is not invoked yet.
+
+library("ggplot2")
+qplot # quick plot
+
+# make scatter plot
+x <- c(-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1)
+x
+y <- x^3
+y
+qplot(x, y)
+
+# make histogram
+x <- c(1, 2, 2, 2, 3, 3)
+qplot(x, binwidth = 1)
+x2 <- c(1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4)
+qplot(x2, binwidth = 1)
+x3 <- c(0, 1, 1, 2, 2, 2, 3, 3, 4)
+qplot(x3, binwidth = 1)
+
+# how can we use histogram to see precision of dice that we made earlier?
+# use function 'replicate'!
+
+replicate(3, 1 + 1)
+replicate(10, roll())
+
+rolls <- replicate(10000, roll())
+qplot(rolls, binwidth = 1)
+
+# Can we give bias to the dice?
+
+# 2.2 Use help
+
+?qplot
+?sample
+??log # this is not exact function name, just keyword
+
+roll <- function() {
+        die <- 1:6
+        dice <- sample(die, size = 2, replace = TRUE,
+                       prob = c(1/8, 1/8, 1/8, 1/8, 1/8, 3/8))
+        sum(dice)
+}
+
+rolls <- replicate(10000, roll())
+qplot(rolls, binwidth = 1)
