@@ -220,3 +220,111 @@ sum(lst[[1]]) # now it's working!
 sum(lst$numbers) # if it has name attribute, use '$' notation.
 sum(lst[['numbers']]) # this is exactly same with above equation.
 
+
+
+## Chapter 5 Data Manipulation
+
+# data copy
+deck2 <- deck
+
+# 5.1 value update
+vec <- c(0, 0, 0, 0, 0, 0)
+vec[1] <- 1000
+vec
+vec[c(1, 3, 5)] <- c(1, 1, 1)
+vec
+vec[4:6] <- vec[4:6] + 1
+vec
+vec[7] <- 0
+vec
+
+deck2$new <- 1:52  # new variable 'new' added to deck2 data frame
+head(deck2)
+deck2$new <- NULL  # remove variable 'new'
+head(deck2)
+
+## War game -> the score of ace is 14 not 1
+deck2[c(13, 26, 39, 52), ] # find ace card
+deck2$value[c(13, 26, 39, 52)] <- c(14, 14, 14, 14)  # can use just '14' because of recycling rule
+deck2[c(13, 26, 39, 52), ]
+
+# 5.2 Logical subsetting
+# If cards are shuffled? How can we find ace out?
+deck3 <- shuffle(deck)
+deck3
+
+deck2$face
+deck2$face == 'ace'
+sum(deck2$face == 'ace') # Logical operator regards '1' for TRUE and '0' for FALSE
+
+deck3[deck3$face == 'ace', ]
+deck3$value[deck3$face == 'ace'] <- 14
+deck3
+
+## Heart game -> Values of every cards are '0', apart from 'Heart' cards and 'Spade Queen'
+deck4 <- deck
+deck4$value <- 0
+deck4
+deck4$value[deck4$suit == 'hearts'] <- 1
+deck4
+# Now we should find out spade queen! how can we do?
+deck4[deck4$face == 'queen', ]
+deck4[deck4$suit == 'spades', ]
+deck4[deck4$face == 'queen' & deck4$suit == 'spades', ]
+deck4$value[deck4$face == 'queen' & deck4$suit == 'spades'] <-  13
+deck4
+
+# examples
+w <- c(-1, 0, 1)
+x <- c(5, 15)
+y <- 'February'
+z <- c('Monday', 'Tuesday', 'Friday')
+# is w positive number?
+w > 0
+# is x greater than 10 and less than 20?
+x > 10 & x < 20
+# object of variable y tells us 'February'?
+y == 'February'
+# does every value of z tell us day?
+all(z %in% c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'))
+
+## Black Jack -> face = score, but kin, queen jack = 10, ace get score 1 or 10 as the result of game
+deck5 <- deck
+deck5[deck5$face %in% c('king', 'queen', 'jack'), ]
+facecards <- deck5$face %in% c('king', 'queen', 'jack')
+deck5[facecards, ]
+deck5$value[facecards] <- 10
+deck5
+
+# Can we set the score of ace properly? how? the score of 'ace' is changed by specific condition!.
+# If the total score of my cards is less than 21, the score of ace is 11, otherwise 1.
+# This means the information is missing!
+
+# 5.3 Missing information
+# 'NA' means missing
+1 + NA
+c(NA, 1:50)
+mean(c(NA, 1:50)) # if we have just one 'NA' value, all numeric operation should be 'NA'
+# so R provide special argument that get rid of 'NA' value, na.rm
+mean(c(NA, 1:50), na.rm = TRUE)
+
+# In order to find 'NA' value, we can use function is.na
+vec <- c(1, 2, 3, NA)
+is.na(vec)
+
+# Let's give the score of 'ace' NA
+deck5$value[deck5$face == 'ace'] <- NA
+deck5
+# Then we're going to give ace the score by conditional state!
+
+
+
+
+
+
+
+
+
+
+
+
