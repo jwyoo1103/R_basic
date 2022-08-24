@@ -215,7 +215,7 @@ median(deck$value)
 lst <- list(numbers = c(1, 2), logical = TRUE, strings = c('a', 'b', 'c'))
 lst
 lst[1] # this notation returns list, not a vector! To return vector, we should use double quote!!
-sum(lst[1]) # not working! because lst[1] also list!
+#sum(lst[1]) # not working! because lst[1] also list!
 sum(lst[[1]]) # now it's working!
 sum(lst$numbers) # if it has name attribute, use '$' notation.
 sum(lst[['numbers']]) # this is exactly same with above equation.
@@ -319,9 +319,81 @@ deck5
 
 
 
+## Chapter 6 R Environment
 
+# 6.2 Environment manupulation
 
+as.environment('package:stats')
+globalenv()
+baseenv()
+emptyenv()
 
+parent.env(globalenv())
+parent.env(emptyenv()) # empty environment is the only environment that does not have parent env.
+
+ls(emptyenv())
+ls(globalenv())
+
+head(globalenv()$deck, 3)
+assign('new', 'Hello Global', envir=globalenv())
+globalenv()$new
+
+environment()
+# R find your command in global environment first, but there is no object?
+
+# 6.3 Scoping rule
+# 1. R finds your objects in active environment first.
+# 2. In case of command line work, active env is global env, 
+#    therefore, R start to find your objects that are invoked in command line, in global environment.
+# 3. If R can't get objects that you want to find, R search its parent environment until it find objects
+#    or reach empty environment.
+
+deal <- function(){
+        deck[1, ]
+}
+environment(deal)
+deal()
+# let's remove first cards after deal from deck
+DECK <- deck
+deck <- deck[-1, ]
+head(deck)
+
+deal <- function(){
+        card <- deck[1, ]
+        deck <- deck[-1, ]
+        card
+}
+deal()
+deal()
+deck
+# when using deal function, every dealed card should be removed. 
+# But deck object inside function uses 'deck' existed in global env.
+# deck object of global env is not changed by function. so deal function is not working that we want to
+# How we can assign deck[-1, ] inside deal function to deck object of global env?
+
+deal <- function(){
+        card <- deck[1, ]
+        assign('deck', deck[-1, ], envir=globalenv())
+        card
+}
+deal()
+deal()
+deal()
+# Now, every first card in deck object is effectively removed!!
+
+head(deck, 3)
+# let's see the shuffle function
+shuffle # shuffle function doesn't mix card object. Just return mixed deck object's copy.
+a <- shuffle(deck)
+head(a, 3)
+head(deck, 3) # after use shuffle function, order of original deck object is not changed
+
+# Now, we write function shuffle again that 'deck' object in global env is replaced by
+# mixed 'DECK' object.
+shuffle <- function(){
+        random <- sample(1:52, size = 52)
+        deck <- assign('deck', DECK[random, ], envir = globalenv())
+}
 
 
 
