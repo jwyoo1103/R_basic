@@ -395,6 +395,75 @@ shuffle <- function(){
         deck <- assign('deck', DECK[random, ], envir = globalenv())
 }
 
+deal()
+shuffle()
+deal()
+# 'deck' is in global environment. that makes some problem if we change deck.
+# to get rid of this issue, deck will be saved in runtime environment.
+
+setup <- function(deck){
+        DECK <- deck
+        
+        DEAL <- function(){
+                card <- deck[1, ]
+                assign('deck', deck[-1, ], envir = globalenv())
+                card
+        }
+        
+        SHUFFLE <- function(){
+                random <- sample(1:52, size = 52)
+                assign('deck', DECK[random, ], envir = globalenv)
+        }
+        list(deal = DEAL, shuffle = SHUFFLE)
+} # now we saved arguments in runtime environment.
+
+cards <- setup(deck)
+deal <- cards$deal
+shuffle <- cards$shuffle
+# now we can use above functions but their location is no more global env!
+deal
+environment(shuffle)
+
+# Let's make functions refers to their parent environment, not global enviroment
+setup <- function(deck){
+        DECK <- deck
+        
+        DEAL <- function(){
+                card <- deck[1, ]
+                assign('deck', deck[-1, ], envir = parent.env(environment()))
+                card
+        }
+        
+        SHUFFLE <- function(){
+                random <- sample(1:52, size = 52)
+                assign('deck', DECK[random, ], envir = parent.env(environment()))
+        }
+        
+        list(deal = DEAL, shuffle = SHUFFLE)
+}
+
+cards <- setup(deck)
+deal <- cards$deal
+shuffle <- cards$shuffle
+
+# Now, we use card game even if deck accidentally removed in global environment.
+
+rm(deck)
+
+shuffle()
+deal()
+deal()
+
+
+
+
+
+
+
+
+
+
+
 
 
 
