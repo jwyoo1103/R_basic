@@ -74,3 +74,44 @@ symbols <- c('B', 'BB', 'BBB')
 all(symbols %in% c('B', 'BB', 'BBB'))
 
 bars <- symbols %in% c('B', 'BB', 'BBB')
+all(bars)
+
+# 7.4 Lookup Table 
+payouts <- c('DD' = 100, '7' = 80, 'BBB' = 40, 'BB' = 25,
+             'B' = 10, 'C' = 10, '0' = 0)
+payouts['BBB']
+unname(payouts['BBB'])
+
+
+# Final Scoring board
+same <- length(unique(symbols)) == 1
+bars <- symbols %in% c('B', 'BB', 'BBB')
+
+if (same) {
+        payouts <- c('DD' = 100, '7' = 80, 'BBB' = 40, 'BB' = 25,
+                     'B' = 10, 'C' = 10, '0' = 0)
+        prize <- unname(payouts[symbols[1]])
+} else if (all(bars)) {
+        prize <- 5
+} else {
+        cherries <- sum(symbols == 'C')
+        prize <- c(0, 2, 5)[cherries + 1]
+        # payouts <- c('2' = 5, '1' = 2, '0' = 0)
+        # prize <- unname(payouts[as.character(cherries)])
+}
+
+diamonds <- sum(symbols == 'DD')
+prize * 2^diamonds
+
+
+
+
+
+
+
+
+
+
+
+
+
