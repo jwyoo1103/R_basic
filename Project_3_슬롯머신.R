@@ -103,15 +103,52 @@ if (same) {
 diamonds <- sum(symbols == 'DD')
 prize * 2^diamonds
 
+# make function gathering everything
+score <- function(symbols) {
+        # condition
+        same <- symbols[1] == symbols[2] && symbols[2] == symbols[3]
+        bar <- symbols %in% c('B', 'BB', 'BBB')
+        
+        # caculate prize
+        if (same) {
+                payouts <- c('DD' = 100, '7' = 80, 'BBB' = 40, 'BB' = 25,
+                             'B' = 10, 'C' = 10, '0' = 0)
+                prize <- unname(payouts[symbols[1]])
+        } else if (all(bars)) {
+                prize <- 5
+        } else {
+                cherries <- sum(symbols == 'C')
+                prize <- c(0, 2, 5)[cherries + 1]
+        }
+        
+        # caculate diamond specific prize
+        diamonds <- sum(symbols == 'DD')
+        prize * 2 ^ diamonds
+}
 
+play <- function() {
+        symbols <- get_symbols()
+        print(symbols)
+        score(symbols)
+}
 
+play()
+play()
 
+## Chapter 8 S3
 
+play()
+one_play <- play()
+one_play # if play() function assigned one_play variable, it doesn't print symbols any more.
 
+# 8.1 S3 System
+# S3 system is the class system used in R program.
+num <- 1000000000
+print(num)
+class(num) <- c('POSIXct', 'POSIXt')
+print(num)
+# S3 has attribute (especially class attr), generic function, and method
 
-
-
-
-
+# 8.2 attribute
 
 
