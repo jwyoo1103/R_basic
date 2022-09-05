@@ -151,4 +151,95 @@ print(num)
 
 # 8.2 attribute
 
+one_play
+attributes(one_play)
+
+play <- function() {
+        symbols <- get_symbols()
+        prize <- score(symbols)
+        attr(prize, 'symbols') <- symbols
+        prize
+}
+
+play()
+play()
+two_play <- play()
+two_play
+
+play <- function() {
+        symbols <- get_symbols()
+        structure(score(symbols), symbols = symbols)
+}
+
+three_play <- play()
+three_play
+
+slot_display <- function(prize) {
+        # extract symbols attributes
+        symbols <- attr(prize, 'symbols')
+        
+        # concatenate symbols vector
+        symbols <- paste(symbols, collapse = ' ')
+        
+        # join prize to symbols
+        string <- paste(symbols, prize, sep = '\n$')
+        
+        # representation with no quote
+        cat(string)
+}
+
+slot_display(three_play)
+slot_display(play())
+slot_display(play())
+
+# 8.3 Generic function
+# Function 'print' is a generic function which means that 'print' function designed to work case by case
+print
+
+# 8.4 Method
+methods(print)
+
+one_play
+two_play
+three_play
+
+class(two_play) <- 'slots'
+args(print)
+print.slots <- function(x, ...) {
+        cat("print.slots 메서드를 사용하고 있습니다.")
+}
+
+two_play
+
+rm(print.slots)
+
+print.slots <- function(x, ...) {
+        slot_display(x)
+}
+
+two_play
+
+# Let's fix that function (play()) should be assigned class 'slots'
+play <- function() {
+        symbols <- get_symbols()
+        structure(score(symbols), symbols = symbols, class = 'slots')
+}
+
+class(play())
+
+play()
+play()
+
+# 8.5 Class
+
+
+
+
+
+
+
+
+
+
+
 
